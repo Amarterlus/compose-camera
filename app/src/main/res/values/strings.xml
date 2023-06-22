@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CameraCompose</string>
+    <string name="title_activity_feed_back">FeedBackActivity</string>
+    <string name="title_activity_main2">MainActivity2</string>
+</resources>
