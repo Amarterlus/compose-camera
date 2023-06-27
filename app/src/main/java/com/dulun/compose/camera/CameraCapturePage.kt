@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
@@ -59,7 +60,7 @@ import java.nio.ByteBuffer
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CameraCapturePage() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Box(modifier = Modifier.fillMaxSize().systemBarsPadding()) {
         val permissionState =
             rememberPermissionState(permission = Manifest.permission.CAMERA)
         if (permissionState.status.isGranted.not()) {
@@ -99,6 +100,7 @@ fun CameraCapturePage() {
                 color = MaterialTheme.colors.background, shape = CircleShape, modifier = Modifier
                     .width(200.dp)
                     .height(200.dp)
+                    .align(Alignment.Center)
             ) {
                 CameraX(imageCapture, captureSide)
             }
@@ -153,14 +155,12 @@ fun CameraCapturePage() {
             }
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
                 horizontalArrangement = Arrangement.End
             ) {
 
                 IconButton(
                     onClick = {
-                        Log.d("CameraCapturePage", "CameraCapturePage: turn click")
                         captureSide =
                             if (captureSide == CameraSelector.DEFAULT_FRONT_CAMERA) CameraSelector.DEFAULT_BACK_CAMERA
                             else CameraSelector.DEFAULT_FRONT_CAMERA
