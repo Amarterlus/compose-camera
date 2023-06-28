@@ -1,4 +1,4 @@
-package com.dulun.compose.camera
+package com.dulun.compose.camera.di
 
 import android.content.Context
 import java.io.File

@@ -1,9 +1,11 @@
+import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
-    alias(libs.plugins.ksp)
-//    kotlin("kapt")
-//    alias(libs.plugins.hilt)
+    kotlin("kapt")
+    alias(libs.plugins.hilt)
+//    alias(libs.plugins.ksp)
 }
 
 android {
@@ -24,23 +26,22 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled =  false
-            proguardFiles (getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
     compileOptions {
-        sourceCompatibility=JavaVersion.VERSION_17
-        targetCompatibility=JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
         jvmTarget = "17"
     }
     buildFeatures {
-        compose=true
+        compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion=libs.versions.compose.compiler.extension.get()
-//        kotlinCompilerVersion=kotlin_version
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.extension.get()
     }
     packaging {
         resources {
@@ -51,33 +52,38 @@ android {
 
 dependencies {
 
+    // Core
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.material)
 
+    // Compose
     implementation(platform(libs.compose.bom))
     implementation(libs.activity.compose)
     implementation(libs.ui)
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
-    implementation(libs.material)
+    implementation(libs.material3)
     androidTestImplementation(platform(libs.compose.bom))
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
 
-//    val camerax_version = "1.2.3"
-//    implementation("androidx.camera:camera-core:${camerax_version}")
-//    implementation("androidx.camera:camera-camera2:${camerax_version}")
-//    implementation("androidx.camera:camera-lifecycle:${camerax_version}")
-//    implementation("androidx.camera:camera-view:${camerax_version}")
+    // Camera2
     implementation(libs.camera)
     implementation(libs.camera.lifecycle)
     implementation(libs.camera.view)
 
-//    implementation ("com.google.accompanist:accompanist-permissions:0.18.0")
+    // Permission
     implementation(libs.accompanist.permission)
 
-//    implementation("io.coil-kt:coil-compose:2.4.0")
+    // ImageLoad
     implementation(libs.coil)
+
+    //preferencesDatastore
+    implementation(libs.androidx.datastore.preferences)
+    //hilt
+    implementation(libs.hilt)
+    kapt(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
 }

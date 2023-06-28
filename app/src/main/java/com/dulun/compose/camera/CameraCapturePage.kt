@@ -27,19 +27,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.lightColors
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,6 +51,8 @@ import androidx.core.content.ContextCompat
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
+import com.dulun.compose.camera.di.FileUtils
+import com.dulun.compose.camera.di.FileUtilsImpl
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -60,7 +61,11 @@ import java.nio.ByteBuffer
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CameraCapturePage() {
-    Box(modifier = Modifier.fillMaxSize().systemBarsPadding()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .systemBarsPadding()
+    ) {
         val permissionState =
             rememberPermissionState(permission = Manifest.permission.CAMERA)
         if (permissionState.status.isGranted.not()) {
@@ -80,7 +85,7 @@ fun CameraCapturePage() {
                         Icon(
                             imageVector = Icons.Default.Lock,
                             contentDescription = null,
-                            tint = lightColors().primary,
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(58.dp)
                         )
                     }
@@ -97,7 +102,7 @@ fun CameraCapturePage() {
                 mutableStateOf(CameraSelector.DEFAULT_FRONT_CAMERA)
             }
             Surface(
-                color = MaterialTheme.colors.background, shape = CircleShape, modifier = Modifier
+                color = MaterialTheme.colorScheme.background, shape = CircleShape, modifier = Modifier
                     .width(200.dp)
                     .height(200.dp)
                     .align(Alignment.Center)
@@ -148,24 +153,26 @@ fun CameraCapturePage() {
                     Icon(
                         imageVector = Icons.Default.AddCircle,
                         contentDescription = null,
-                        tint = lightColors().primary,
-                        modifier = Modifier.size(60.dp)
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(80.dp)
                     )
                 }
             }
 
             Row(
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
                 horizontalArrangement = Arrangement.End
             ) {
 
                 IconButton(
                     onClick = {
-                        captureSide =
-                            if (captureSide == CameraSelector.DEFAULT_FRONT_CAMERA) CameraSelector.DEFAULT_BACK_CAMERA
-                            else CameraSelector.DEFAULT_FRONT_CAMERA
-                    }) {
-                    Image(painter = painterResource(id = R.mipmap.icon_turn), contentDescription = "")
+                        captureSide = if (captureSide == CameraSelector.DEFAULT_FRONT_CAMERA)
+                            CameraSelector.DEFAULT_BACK_CAMERA else CameraSelector.DEFAULT_FRONT_CAMERA
+                    },
+                ) {
+                    Icon(painter = painterResource(id = R.mipmap.icon_turn), contentDescription = "", tint = MaterialTheme.colorScheme.primary)
                 }
                 Spacer(modifier = Modifier.width(20.dp))
             }
@@ -184,13 +191,11 @@ private fun takeAndSavePhoto(
 ) {
     val fileUtils: FileUtils by lazy { FileUtilsImpl() }
     fileUtils.createDirectoryIfNotExist(context)
-//                                val file = fileUtils.createFile(context)
-    val outputOptions = ImageCapture.OutputFileOptions.Builder(fileUtils.createFile(context)).build()
+    val file = fileUtils.createFile(context)
+    val outputOptions = ImageCapture.OutputFileOptions.Builder(file).build()
     imageCapture.takePicture(outputOptions, ContextCompat.getMainExecutor(context),
         object : ImageCapture.OnImageSavedCallback {
             override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-//                                            val saveUri = Uri.fromFile(file)
-//                                            imageUri.value = saveUri
                 imageUri.value = outputFileResults.savedUri
                 spaceValue.value = 24
                 Toast.makeText(context, outputFileResults.savedUri?.path, Toast.LENGTH_SHORT).show()
@@ -236,9 +241,7 @@ fun CameraX(imageCapture: ImageCapture, captureSide: CameraSelector) {
     }
 
     val previewView = remember {
-        PreviewView(context).apply {
-            id = R.id.preview_view
-        }
+        PreviewView(context)
     }
     Box(modifier = Modifier.fillMaxSize()) {
         AndroidView(factory = { previewView }, modifier = Modifier.fillMaxSize()) {
