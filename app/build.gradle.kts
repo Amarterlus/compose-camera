@@ -58,22 +58,15 @@ dependencies {
 
     // Compose
     implementation(platform(libs.compose.bom))
-    implementation(libs.activity.compose)
-    implementation(libs.ui)
-    implementation(libs.ui.graphics)
-    implementation(libs.ui.tooling.preview)
-    implementation(libs.material3)
+    implementation(libs.bundles.compose)
+    implementation(libs.bundles.compose)
     androidTestImplementation(platform(libs.compose.bom))
-    debugImplementation(libs.ui.tooling)
-    debugImplementation(libs.ui.test.manifest)
+    debugImplementation(libs.bundles.composeDebug)
 
     // Camera2
     implementation(libs.camera)
     implementation(libs.camera.lifecycle)
     implementation(libs.camera.view)
-
-    // Permission
-    implementation(libs.accompanist.permission)
 
     // ImageLoad
     implementation(libs.coil)
@@ -83,5 +76,5 @@ dependencies {
     //hilt
     implementation(libs.hilt)
     kapt(libs.hilt.compiler)
-    implementation(libs.hilt.navigation.compose)
+    implementation(libs.compose.hilt.navigation)
 }

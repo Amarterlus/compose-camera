@@ -5,6 +5,8 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageCapture
@@ -37,6 +39,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -48,17 +51,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.core.content.PermissionChecker
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.dulun.compose.camera.di.FileUtils
 import com.dulun.compose.camera.di.FileUtilsImpl
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
 import java.nio.ByteBuffer
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CameraCapturePage() {
     Box(
@@ -66,9 +66,15 @@ fun CameraCapturePage() {
             .fillMaxSize()
             .systemBarsPadding()
     ) {
-        val permissionState =
-            rememberPermissionState(permission = Manifest.permission.CAMERA)
-        if (permissionState.status.isGranted.not()) {
+        val context = LocalContext.current
+        var cameraPermissionState by remember {
+            mutableStateOf(PermissionChecker.checkSelfPermission(context, Manifest.permission.CAMERA) == PermissionChecker.PERMISSION_GRANTED)
+        }
+        val permissionRequest = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) {
+            cameraPermissionState = it
+        }
+
+        if (cameraPermissionState.not()) {
             // 无权限 展示底部解锁按钮
             Column(modifier = Modifier.fillMaxSize()) {
                 Row(modifier = Modifier.weight(1f)) {}
@@ -80,7 +86,7 @@ fun CameraCapturePage() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(onClick = {
-                        permissionState.launchPermissionRequest()
+                        permissionRequest.launch(Manifest.permission.CAMERA)
                     }) {
                         Icon(
                             imageVector = Icons.Default.Lock,
@@ -110,7 +116,7 @@ fun CameraCapturePage() {
                 CameraX(imageCapture, captureSide)
             }
             val spaceValue = remember {
-                mutableStateOf(0)
+                mutableIntStateOf(0)
             }
             val imageByteData = remember {
                 mutableStateOf<ByteBuffer?>(null)
