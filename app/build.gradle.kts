@@ -25,7 +25,10 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -40,6 +43,7 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.extension.get()
+        useLiveLiterals = true
     }
     packaging {
         resources {
@@ -59,21 +63,20 @@ dependencies {
     // Compose
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose)
-    implementation(libs.bundles.compose)
     androidTestImplementation(platform(libs.compose.bom))
     debugImplementation(libs.bundles.composeDebug)
 
     // Camera2
-    implementation(libs.camera)
+    implementation(libs.camera.core)
     implementation(libs.camera.lifecycle)
     implementation(libs.camera.view)
 
     // ImageLoad
     implementation(libs.coil)
 
-    //preferencesDatastore
+    // preferencesDatastore
     implementation(libs.androidx.datastore.preferences)
-    //hilt
+    // hilt
     implementation(libs.hilt)
     kapt(libs.hilt.compiler)
     implementation(libs.compose.hilt.navigation)

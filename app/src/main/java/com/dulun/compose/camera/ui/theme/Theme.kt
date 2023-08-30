@@ -14,7 +14,7 @@ private val DarkColorPalette = darkColorScheme(
     onPrimary = DarkColors.onPrimary,
     background = DarkColors.background,
     primaryContainer = DarkColors.primaryContainer,
-    onPrimaryContainer = DarkColors.onPrimaryContainer,
+    onPrimaryContainer = DarkColors.onPrimaryContainer
 )
 
 private val LightColorPalette = lightColorScheme(
@@ -25,7 +25,7 @@ private val LightColorPalette = lightColorScheme(
     onPrimary = LightColors.onPrimary,
     background = LightColors.background,
     primaryContainer = LightColors.primaryContainer,
-    onPrimaryContainer = LightColors.onPrimaryContainer,
+    onPrimaryContainer = LightColors.onPrimaryContainer
     /* Other default colors to override
     background = Color.White,
     surface = Color.White,

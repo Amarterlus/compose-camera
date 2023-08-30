@@ -68,9 +68,13 @@ fun CameraCapturePage() {
     ) {
         val context = LocalContext.current
         var cameraPermissionState by remember {
-            mutableStateOf(PermissionChecker.checkSelfPermission(context, Manifest.permission.CAMERA) == PermissionChecker.PERMISSION_GRANTED)
+            mutableStateOf(
+                PermissionChecker.checkSelfPermission(context, Manifest.permission.CAMERA) == PermissionChecker.PERMISSION_GRANTED
+            )
         }
-        val permissionRequest = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) {
+        val permissionRequest = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission()
+        ) {
             cameraPermissionState = it
         }
 
@@ -108,7 +112,9 @@ fun CameraCapturePage() {
                 mutableStateOf(CameraSelector.DEFAULT_FRONT_CAMERA)
             }
             Surface(
-                color = MaterialTheme.colorScheme.background, shape = CircleShape, modifier = Modifier
+                color = MaterialTheme.colorScheme.background,
+                shape = CircleShape,
+                modifier = Modifier
                     .width(200.dp)
                     .height(200.dp)
                     .align(Alignment.Center)
@@ -139,7 +145,9 @@ fun CameraCapturePage() {
                             ImageRequest.Builder(context).data(it).apply {
                                 transformations(CircleCropTransformation())
                             }.build()
-                        ), contentDescription = "", modifier = Modifier.size(60.dp)
+                        ),
+                        contentDescription = "",
+                        modifier = Modifier.size(60.dp)
                     )
                 }
                 imageByteData.value?.let {
@@ -148,7 +156,9 @@ fun CameraCapturePage() {
                             ImageRequest.Builder(context).data(it).apply {
                                 transformations(CircleCropTransformation())
                             }.build()
-                        ), contentDescription = "", modifier = Modifier.size(60.dp)
+                        ),
+                        contentDescription = "",
+                        modifier = Modifier.size(60.dp)
                     )
                 }
                 Spacer(modifier = Modifier.width(spaceValue.value.dp))
@@ -171,23 +181,26 @@ fun CameraCapturePage() {
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.End
             ) {
-
                 IconButton(
                     onClick = {
-                        captureSide = if (captureSide == CameraSelector.DEFAULT_FRONT_CAMERA)
-                            CameraSelector.DEFAULT_BACK_CAMERA else CameraSelector.DEFAULT_FRONT_CAMERA
-                    },
+                        captureSide = if (captureSide == CameraSelector.DEFAULT_FRONT_CAMERA) {
+                            CameraSelector.DEFAULT_BACK_CAMERA
+                        } else {
+                            CameraSelector.DEFAULT_FRONT_CAMERA
+                        }
+                    }
                 ) {
-                    Icon(painter = painterResource(id = R.mipmap.icon_turn), contentDescription = "", tint = MaterialTheme.colorScheme.primary)
+                    Icon(
+                        painter = painterResource(id = R.mipmap.icon_turn),
+                        contentDescription = "",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
                 }
                 Spacer(modifier = Modifier.width(20.dp))
             }
-
-
         }
     }
 }
-
 
 private fun takeAndSavePhoto(
     imageCapture: ImageCapture,
@@ -199,7 +212,9 @@ private fun takeAndSavePhoto(
     fileUtils.createDirectoryIfNotExist(context)
     val file = fileUtils.createFile(context)
     val outputOptions = ImageCapture.OutputFileOptions.Builder(file).build()
-    imageCapture.takePicture(outputOptions, ContextCompat.getMainExecutor(context),
+    imageCapture.takePicture(
+        outputOptions,
+        ContextCompat.getMainExecutor(context),
         object : ImageCapture.OnImageSavedCallback {
             override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                 imageUri.value = outputFileResults.savedUri
@@ -215,14 +230,12 @@ private fun takeAndSavePhoto(
     )
 }
 
-
 private fun takePhoto(
     imageCapture: ImageCapture,
     context: Context,
     imageByteData: MutableState<ByteBuffer?>,
     spaceValue: MutableState<Int>
 ) {
-
     imageCapture.takePicture(
         ContextCompat.getMainExecutor(context),
         @ExperimentalGetImage object : ImageCapture.OnImageCapturedCallback() {
@@ -234,7 +247,8 @@ private fun takePhoto(
             override fun onError(exception: ImageCaptureException) {
                 Log.e("--onError--", exception.toString())
             }
-        })
+        }
+    )
 }
 
 @Composable
@@ -271,7 +285,5 @@ fun CameraX(imageCapture: ImageCapture, captureSide: CameraSelector) {
                 }
             }, ContextCompat.getMainExecutor(context))
         }
-
-
     }
 }

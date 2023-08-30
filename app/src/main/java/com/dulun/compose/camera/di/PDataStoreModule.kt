@@ -18,9 +18,10 @@ object PDataStoreModule {
         context.dataStore
 }
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = DataStoreCont.DATA_STORE_NAME)
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
+    name = DataStoreCont.DATA_STORE_NAME
+)
 
-
-object DataStoreCont{
+object DataStoreCont {
     const val DATA_STORE_NAME = "app"
 }

@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -40,7 +41,7 @@ import kotlinx.coroutines.withContext
 @Composable
 fun StartPageView(onNextPage: () -> Unit) {
     var lineAlpha by remember {
-        mutableStateOf(0f)
+        mutableFloatStateOf(0f)
     }
     val animateAble = remember {
         Animatable(0f)
@@ -68,7 +69,8 @@ fun StartPageView(onNextPage: () -> Unit) {
             delay(500)
             showLine = true
             animateAble.animateTo(
-                targetValue = 1f, animationSpec = tween(durationMillis = 500, easing = LinearEasing)
+                targetValue = 1f,
+                animationSpec = tween(durationMillis = 500, easing = LinearEasing)
             )
         }
         withContext(Dispatchers.IO) {
@@ -87,7 +89,8 @@ fun StartPageView(onNextPage: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AnimatedVisibility(
-            visible = iconVisible, enter = scaleIn()
+            visible = iconVisible,
+            enter = scaleIn()
         ) {
             Canvas(
                 modifier = Modifier
@@ -96,7 +99,9 @@ fun StartPageView(onNextPage: () -> Unit) {
             ) {
                 val centerOffset = Offset(size.width / 2, size.height / 2)
                 drawCircle(
-                    color = circleColor, radius = size.minDimension / 2, center = centerOffset
+                    color = circleColor,
+                    radius = size.minDimension / 2,
+                    center = centerOffset
                 )
                 if (showLine) {
                     lineAlpha = animateAble.value
@@ -109,7 +114,6 @@ fun StartPageView(onNextPage: () -> Unit) {
                         alpha = lineAlpha
                     )
                 }
-
             }
         }
 
@@ -125,7 +129,6 @@ fun StartPageView(onNextPage: () -> Unit) {
                 modifier = Modifier.padding(15.dp)
             )
         }
-
     }
 }
 
@@ -134,4 +137,3 @@ fun StartPageView(onNextPage: () -> Unit) {
 fun StartPagePreview() {
     StartPageView() {}
 }
-
