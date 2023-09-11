@@ -1,9 +1,9 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
-    kotlin("kapt")
+//    kotlin("kapt")
+    alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
-//    alias(libs.plugins.ksp)
 }
 
 android {
@@ -24,7 +24,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -78,6 +79,7 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     // hilt
     implementation(libs.hilt)
-    kapt(libs.hilt.compiler)
+//    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
     implementation(libs.compose.hilt.navigation)
 }

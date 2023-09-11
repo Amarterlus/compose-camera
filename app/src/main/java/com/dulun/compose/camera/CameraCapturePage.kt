@@ -103,8 +103,6 @@ fun CameraCapturePage() {
             }
         } else {
             // 有权限 展示拍照功能
-            val context = LocalContext.current
-
             val imageCapture = remember {
                 ImageCapture.Builder().build()
             }
@@ -161,7 +159,7 @@ fun CameraCapturePage() {
                         modifier = Modifier.size(60.dp)
                     )
                 }
-                Spacer(modifier = Modifier.width(spaceValue.value.dp))
+                Spacer(modifier = Modifier.width(spaceValue.intValue.dp))
                 IconButton(onClick = {
 //                    takeAndSavePhoto(imageCapture, context,  imageUri,spaceValue)
                     takePhoto(imageCapture, context, imageByteData, spaceValue)
